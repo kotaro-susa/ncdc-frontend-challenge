@@ -1,7 +1,4 @@
-import Sidebar from "@/components/layout/Sidebar/Sidebar";
-import Footer from "@/components/layout/Footer/Footer";
-import MainContent from "@/components/layout/MainContent/MainContent";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import ContentLayout from "@/components/layout/ContentLayout/ContentLayout";
 import { getContent, getContentList } from "@/actions/content";
 
 interface PageProps {
@@ -18,19 +15,11 @@ export default async function ContentDetailPage({ params }: PageProps) {
   ]);
 
   return (
-    <SidebarProvider className="h-screen w-screen overflow-hidden">
-      <div className="flex w-full h-full">
-        <Sidebar contentList={contentList} currentId={Number(id)} />
-        <SidebarInset className="flex-1 flex flex-col">
-          <main className="flex-1 p-7.5 bg-[#F5F8FA] overflow-hidden mt-7.5 mx-10 rounded-2xl">
-            <MainContent
-              title={content.title || ""}
-              content={content.body || ""}
-            />
-          </main>
-          <Footer />
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+    <ContentLayout
+      contentList={contentList}
+      currentId={Number(id)}
+      title={content.title || ""}
+      body={content.body || ""}
+    />
   );
 }

@@ -19,9 +19,10 @@ import type { Content } from "@/generated/api.schemas";
 interface SidebarProps {
   contentList?: Content[];
   currentId?: number;
+  onDelete?: (id: number) => void;
 }
 
-export default function Sidebar({ contentList = [], currentId }: SidebarProps) {
+export default function Sidebar({ contentList = [], currentId, onDelete }: SidebarProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
@@ -60,7 +61,7 @@ export default function Sidebar({ contentList = [], currentId }: SidebarProps) {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    // 削除処理
+                    onDelete?.(content.id);
                   }}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer hover:opacity-70"
                 >
