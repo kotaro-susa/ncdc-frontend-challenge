@@ -19,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={` ${notoSansJP.variable} antialiased`}>{children}</body>
+    <html lang="ja" className="h-full">
+      <body className={` ${notoSansJP.variable} antialiased h-full overflow-hidden`}>{children}</body>
     </html>
   );
 }
