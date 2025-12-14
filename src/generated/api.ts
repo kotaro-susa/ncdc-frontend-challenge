@@ -10,6 +10,7 @@ import type {
   UpdateContentDTO
 } from './api.schemas';
 
+import { customFetch } from '../lib/api-client';
 
 /**
  * @summary コンテンツ一覧の取得
@@ -36,20 +37,14 @@ export const getContentControllerGetAllContentListUrl = () => {
 
 export const contentControllerGetAllContentList = async ( options?: RequestInit): Promise<contentControllerGetAllContentListResponse> => {
   
-  const res = await fetch(getContentControllerGetAllContentListUrl(),
+  return customFetch<contentControllerGetAllContentListResponse>(getContentControllerGetAllContentListUrl(),
   {      
     ...options,
     method: 'GET'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: contentControllerGetAllContentListResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as contentControllerGetAllContentListResponse
-}
+);}
 
 
 
@@ -78,7 +73,7 @@ export const getContentControllerAddContentUrl = () => {
 
 export const contentControllerAddContent = async (createContentDTO: CreateContentDTO, options?: RequestInit): Promise<contentControllerAddContentResponse> => {
   
-  const res = await fetch(getContentControllerAddContentUrl(),
+  return customFetch<contentControllerAddContentResponse>(getContentControllerAddContentUrl(),
   {      
     ...options,
     method: 'POST',
@@ -86,13 +81,7 @@ export const contentControllerAddContent = async (createContentDTO: CreateConten
     body: JSON.stringify(
       createContentDTO,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: contentControllerAddContentResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as contentControllerAddContentResponse
-}
+);}
 
 
 
@@ -121,20 +110,14 @@ export const getContentControllerGetContentUrl = (id: number,) => {
 
 export const contentControllerGetContent = async (id: number, options?: RequestInit): Promise<contentControllerGetContentResponse> => {
   
-  const res = await fetch(getContentControllerGetContentUrl(id),
+  return customFetch<contentControllerGetContentResponse>(getContentControllerGetContentUrl(id),
   {      
     ...options,
     method: 'GET'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: contentControllerGetContentResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as contentControllerGetContentResponse
-}
+);}
 
 
 
@@ -164,7 +147,7 @@ export const getContentControllerUpdateContentUrl = (id: number,) => {
 export const contentControllerUpdateContent = async (id: number,
     updateContentDTO: UpdateContentDTO, options?: RequestInit): Promise<contentControllerUpdateContentResponse> => {
   
-  const res = await fetch(getContentControllerUpdateContentUrl(id),
+  return customFetch<contentControllerUpdateContentResponse>(getContentControllerUpdateContentUrl(id),
   {      
     ...options,
     method: 'PUT',
@@ -172,13 +155,7 @@ export const contentControllerUpdateContent = async (id: number,
     body: JSON.stringify(
       updateContentDTO,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: contentControllerUpdateContentResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as contentControllerUpdateContentResponse
-}
+);}
 
 
 
@@ -207,20 +184,14 @@ export const getContentControllerDeleteContentUrl = (id: number,) => {
 
 export const contentControllerDeleteContent = async (id: number, options?: RequestInit): Promise<contentControllerDeleteContentResponse> => {
   
-  const res = await fetch(getContentControllerDeleteContentUrl(id),
+  return customFetch<contentControllerDeleteContentResponse>(getContentControllerDeleteContentUrl(id),
   {      
     ...options,
     method: 'DELETE'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: contentControllerDeleteContentResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as contentControllerDeleteContentResponse
-}
+);}
 
 
 

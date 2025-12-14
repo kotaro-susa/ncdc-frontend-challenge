@@ -10,7 +10,12 @@ export default defineConfig({
       client: "fetch",
       mode: "split",
       clean: true,
-      baseUrl: "/",
+      override: {
+        mutator: {
+          path: "./src/lib/api-client.ts",
+          name: "customFetch",
+        },
+      },
     },
   },
 });

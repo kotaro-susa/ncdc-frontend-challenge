@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Sidebar as SidebarUI,
   SidebarContent,
@@ -10,13 +11,17 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { sidebarNavData } from "./sidebarNavData";
 import EditButton from "@/components/common/EditButton";
 import NewPageButton from "@/components/common/NewPageButton";
 import DoneButton from "@/components/common/DoneButton";
+import type { Content } from "@/generated/api.schemas";
 
-export default function Sidebar() {
-  const [activeId, setActiveId] = useState<string>("1");
+interface SidebarProps {
+  contentList?: Content[];
+  currentId?: number;
+}
+
+export default function Sidebar({ contentList = [], currentId }: SidebarProps) {
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
@@ -31,25 +36,26 @@ export default function Sidebar() {
 
       <SidebarContent className="flex-1 overflow-y-auto pl-10">
         <SidebarMenu className="gap-0">
-          {sidebarNavData.map((item) => (
-            <SidebarMenuItem key={item.id} className="relative">
-              <SidebarMenuButton
-                isActive={activeId === item.id}
-                onClick={() => setActiveId(item.id)}
-                className={`
-                  h-11
-                  font-ja text-base
-                  cursor-pointer
-                  pr-8
-                  ${
-                    activeId === item.id
-                      ? "bg-bg-light-blue-1 text-brand-light-blue font-bold rounded"
-                      : "bg-white text-text-black-80 font-normal hover:bg-gray-50"
-                  }
-                `}
-              >
-                <span>{item.label}</span>
-              </SidebarMenuButton>
+          {contentList.map((content) => (
+            <SidebarMenuItem key={content.id} className="relative">
+              <Link href={`/${content.id}`} className="block">
+                <SidebarMenuButton
+                  isActive={currentId === content.id}
+                  className={`
+                    h-11
+                    font-ja text-base
+                    cursor-pointer
+                    pr-8
+                    ${
+                      currentId === content.id
+                        ? "bg-bg-light-blue-1 text-brand-light-blue font-bold rounded"
+                        : "bg-white text-text-black-80 font-normal hover:bg-gray-50"
+                    }
+                  `}
+                >
+                  <span>{content.title || "無題"}</span>
+                </SidebarMenuButton>
+              </Link>
               {isEditing && (
                 <button
                   onClick={(e) => {
