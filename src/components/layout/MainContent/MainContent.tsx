@@ -30,7 +30,7 @@ export default function MainContent({
   const [titleForm, titleFields] = useForm({
     onValidate({ formData }) {
       return parseWithZod(formData, {
-        schema: updateTitleSchema as z.ZodType
+        schema: updateTitleSchema as z.ZodType,
       });
     },
     shouldValidate: "onBlur",
@@ -58,7 +58,7 @@ export default function MainContent({
   const [bodyForm, bodyFields] = useForm({
     onValidate({ formData }) {
       return parseWithZod(formData, {
-        schema: updateBodySchema as z.ZodType
+        schema: updateBodySchema as z.ZodType,
       });
     },
     shouldValidate: "onBlur",
@@ -114,7 +114,7 @@ export default function MainContent({
               type="text"
               name="title"
               defaultValue={title}
-              className="w-full text-2xl font-bold text-text-black-80 bg-white border border-gray-300 rounded px-2 py-1"
+              className="w-full text-2xl font-bold text-text-black-80 bg-white border border-[#4cb3f8] rounded px-2 py-1 focus:outline-none focus:border-[#4cb3f8]"
               disabled={isPending}
               autoFocus
               required
@@ -159,7 +159,7 @@ export default function MainContent({
             <textarea
               name="body"
               defaultValue={content}
-              className="flex-1 bg-white rounded-2xl py-6.5 px-7.5 text-base text-text-black-80 leading-normal resize-none overflow-y-scroll font-ja [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-thumb]:bg-[#B3B3B3] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500"
+              className="flex-1 bg-white rounded-2xl py-6.5 pl-7.5 pr-5 text-base text-text-black-80 leading-normal resize-none overflow-y-auto font-ja border border-[#4cb3f8] focus:outline-none focus:border-[#4cb3f8] box-border [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:mr-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6.5 [&::-webkit-scrollbar-thumb]:bg-[#B3B3B3] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500"
               disabled={isPending}
               required
               minLength={10}
@@ -172,7 +172,7 @@ export default function MainContent({
             )}
           </form>
         ) : (
-          <div className="flex-1 bg-white rounded-2xl py-6.5 px-7.5 text-base text-text-black-80 leading-normal whitespace-pre-wrap overflow-y-scroll font-ja [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-thumb]:bg-[#B3B3B3] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500">
+          <div className="flex-1 bg-white rounded-2xl py-6.5 px-7.5 text-base text-text-black-80 leading-normal whitespace-pre-wrap overflow-y-scroll font-ja [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-track]:my-6.5 [&::-webkit-scrollbar-thumb]:bg-[#B3B3B3] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500">
             {content}
           </div>
         )}

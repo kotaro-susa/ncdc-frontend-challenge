@@ -70,7 +70,7 @@ export default function ContentLayout({
     try {
       const newContent = await createContent({
         title: "無題",
-        body: "",
+        body: "これはダミーデータです",
       });
 
       // 新規作成したコンテンツのページに遷移（編集モードを維持）
