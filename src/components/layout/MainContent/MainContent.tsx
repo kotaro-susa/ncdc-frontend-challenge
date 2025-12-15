@@ -6,7 +6,7 @@ import { parseWithZod } from "@conform-to/zod";
 import EditButton from "@/components/common/EditButton";
 import ActionButton from "@/components/common/ActionButton";
 import { updateTitleSchema, updateBodySchema } from "@/lib/schemas";
-import { updateContentTitle, updateContentBody } from "@/actions/content";
+import { updateContentTitle, updateContentBody } from "@/actions/form-action";
 import { useRouter } from "next/navigation";
 import type { z } from "zod";
 
@@ -21,8 +21,8 @@ export default function MainContent({
   title,
   content,
 }: MainContentProps) {
-  const [isTopEditMode, setIsTopEditMode] = useState(false);
-  const [isBottomEditMode, setIsBottomEditMode] = useState(false);
+  const [isTitleEditing, setIsTitleEditing] = useState(false);
+  const [isBodyEditing, setIsBodyEditing] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -45,7 +45,7 @@ export default function MainContent({
         const result = await updateContentTitle(contentId, formData);
 
         if (result.success) {
-          setIsTopEditMode(false);
+          setIsTitleEditing(false);
           router.refresh();
         } else {
           console.error(result.error);
@@ -73,7 +73,7 @@ export default function MainContent({
         const result = await updateContentBody(contentId, formData);
 
         if (result.success) {
-          setIsBottomEditMode(false);
+          setIsBodyEditing(false);
           router.refresh();
         } else {
           console.error(result.error);
@@ -82,29 +82,29 @@ export default function MainContent({
     },
   });
 
-  const handleTopEdit = () => {
-    setIsTopEditMode(true);
+  const handleTitleEdit = () => {
+    setIsTitleEditing(true);
   };
 
-  const handleTopCancel = () => {
+  const handleTitleCancel = () => {
     titleForm.reset();
-    setIsTopEditMode(false);
+    setIsTitleEditing(false);
   };
 
-  const handleBottomEdit = () => {
-    setIsBottomEditMode(true);
+  const handleBodyEdit = () => {
+    setIsBodyEditing(true);
   };
 
-  const handleBottomCancel = () => {
+  const handleBodyCancel = () => {
     bodyForm.reset();
-    setIsBottomEditMode(false);
+    setIsBodyEditing(false);
   };
 
   return (
     <div className="h-full flex flex-col">
       {/* タイトル編集エリア */}
       <div className="flex items-center justify-between pl-7.5 py-1 shrink-0">
-        {isTopEditMode ? (
+        {isTitleEditing ? (
           <form
             id={titleForm.id}
             onSubmit={titleForm.onSubmit}
@@ -129,11 +129,11 @@ export default function MainContent({
         ) : (
           <h1 className="text-2xl font-bold text-text-black-80">{title}</h1>
         )}
-        {isTopEditMode ? (
+        {isTitleEditing ? (
           <div className="flex gap-2.5">
             <ActionButton
               variant="cancel"
-              onClick={handleTopCancel}
+              onClick={handleTitleCancel}
               disabled={isPending}
             />
             <ActionButton
@@ -144,13 +144,13 @@ export default function MainContent({
             />
           </div>
         ) : (
-          <EditButton onClick={handleTopEdit} />
+          <EditButton onClick={handleTitleEdit} />
         )}
       </div>
 
       {/* 本文編集エリア */}
       <div className="flex-1 flex mt-4 gap-5 min-h-0">
-        {isBottomEditMode ? (
+        {isBodyEditing ? (
           <form
             id={bodyForm.id}
             onSubmit={bodyForm.onSubmit}
@@ -178,11 +178,11 @@ export default function MainContent({
         )}
 
         <div className="shrink-0 flex items-start">
-          {isBottomEditMode ? (
+          {isBodyEditing ? (
             <div className="flex gap-2.5">
               <ActionButton
                 variant="cancel"
-                onClick={handleBottomCancel}
+                onClick={handleBodyCancel}
                 disabled={isPending}
               />
               <ActionButton
@@ -193,7 +193,7 @@ export default function MainContent({
               />
             </div>
           ) : (
-            <EditButton onClick={handleBottomEdit} />
+            <EditButton onClick={handleBodyEdit} />
           )}
         </div>
       </div>
