@@ -114,7 +114,7 @@ export default function MainContent({
               type="text"
               name="title"
               defaultValue={title}
-              className="w-full text-2xl pl-7.5  font-bold text-text-black-80 bg-white border border-[#4cb3f8] rounded py-1 focus:outline-none focus:border-[#4cb3f8]"
+              className="w-full text-2xl pl-7.5  font-bold text-text-black-80 bg-white border border-brand-light-blue rounded py-1 focus:outline-none focus:border-brand-light-blue"
               disabled={isPending}
               autoFocus
               required
@@ -161,7 +161,7 @@ export default function MainContent({
             <textarea
               name="body"
               defaultValue={content}
-              className="flex-1 bg-white rounded-2xl py-7.5 pl-7.5 pr-5 text-base text-text-black-80 leading-normal resize-none overflow-y-auto font-ja border border-[#4cb3f8] focus:outline-none focus:border-[#4cb3f8] box-border [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:mr-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6.5 [&::-webkit-scrollbar-thumb]:bg-[#B3B3B3] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500"
+              className="flex-1 bg-white rounded-2xl py-7.5 pl-7.5 pr-5 text-base text-text-black-80 leading-normal resize-none overflow-y-auto font-ja border border-brand-light-blue focus:outline-none focus:border-brand-light-blue box-border [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:mr-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6.5 [&::-webkit-scrollbar-thumb]:bg-button-normal [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500"
               disabled={isPending}
               required
               minLength={10}
@@ -174,7 +174,7 @@ export default function MainContent({
             )}
           </form>
         ) : (
-          <div className="flex-1 bg-white rounded-2xl py-7.5 px-7.5 text-base text-text-black-80 leading-normal whitespace-pre-wrap overflow-y-scroll font-ja [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-track]:my-6.5 [&::-webkit-scrollbar-thumb]:bg-[#B3B3B3] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500">
+          <div className="flex-1 bg-white rounded-2xl py-7.5 px-7.5 text-base text-text-black-80 leading-normal whitespace-pre-wrap overflow-y-scroll font-ja [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-track]:my-6.5 [&::-webkit-scrollbar-thumb]:bg-button-normal [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500">
             {content}
           </div>
         )}

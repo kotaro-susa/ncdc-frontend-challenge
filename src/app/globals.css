@@ -23,12 +23,20 @@
 
   /* ボタン */
   --color-button-primary: #4cb3f8;
+  --color-button-primary-hover: #3c8ec4;
+  --color-button-primary-active: #347cab;
   --color-button-normal: #b3b3b3;
   --color-button-secondary-border: #4cb3f8;
+  --color-button-secondary-hover: #cccccc;
+  --color-button-secondary-active: #b3b3b3;
 
   /* 背景色 */
   --color-bg-light-blue-1: #f5f8fa;
+  --color-bg-light-blue-2: #f6f8fa;
   --color-bg-dark-light-blue-1: #c8e6fa;
+
+  /* その他 */
+  --color-cancel-button: #999999;
 }
 
 /* ============================================

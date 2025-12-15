@@ -36,7 +36,7 @@ export default function Sidebar({
   return (
     <SidebarUI
       collapsible="none"
-      className="w-70 bg-white border-r border-[#F6F8FA] pt-7.5 flex flex-col"
+      className="w-70 bg-white border-r border-bg-light-blue-2 pt-7.5 flex flex-col"
     >
       <SidebarHeader className="flex flex-row gap-1.5 p-0 mb-5 shrink-0 pl-10">
         <Image src="/logo.svg" alt="Logo" width={32} height={32} />
@@ -86,7 +86,7 @@ export default function Sidebar({
         </SidebarMenu>
       </SidebarContent>
       <div
-        className={`h-15 flex items-center pr-2.5 bg-[#F6F8FA] border-t border-[#F6F8FA] shrink-0 ${
+        className={`h-15 flex items-center pr-2.5 bg-bg-light-blue-2 border-t border-bg-light-blue-2 shrink-0 ${
           isEditing ? "justify-between pl-10" : "justify-end"
         }`}
       >

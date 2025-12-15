@@ -24,9 +24,10 @@ export default function ActionButton({
       disabled={disabled}
       type={type}
       form={form}
+      aria-label={isCancel ? "編集をキャンセル" : "変更を保存"}
       className={`w-10 h-10 ${
         isCancel
-          ? "bg-[#999999] hover:bg-[#999999]/90"
+          ? "bg-cancel-button hover:bg-cancel-button/90"
           : "bg-brand-light-blue hover:bg-brand-light-blue/90"
       } text-white font-ja font-bold flex-col gap-0 cursor-pointer text-[10px] p-0 disabled:opacity-50 disabled:cursor-not-allowed`}
     >

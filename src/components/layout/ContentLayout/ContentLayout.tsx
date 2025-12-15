@@ -100,10 +100,10 @@ export default function ContentLayout({
           onEditingChange={handleEditingChange}
         />
         <SidebarInset className="flex-1 flex flex-col">
-          <div className="lg:hidden flex items-center px-4 py-3 bg-white border-b border-[#F6F8FA]">
+          <div className="lg:hidden flex items-center px-4 py-3 bg-white border-b border-bg-light-blue-2">
             <SidebarTrigger className="size-10 hover:bg-gray-100 rounded-md" />
           </div>
-          <main className="flex-1 p-7.5 bg-[#F5F8FA] overflow-hidden lg:mt-7.5 lg:mx-10 mt-4 mx-4 rounded-2xl">
+          <main className="flex-1 p-7.5 bg-bg-light-blue-1 overflow-hidden lg:mt-7.5 lg:mx-10 mt-4 mx-4 rounded-2xl">
             <MainContent contentId={currentId} title={title} content={body} />
           </main>
           <Footer />
