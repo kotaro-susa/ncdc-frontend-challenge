@@ -117,6 +117,8 @@ export default function MainContent({
               className="w-full text-2xl font-bold text-text-black-80 bg-white border border-gray-300 rounded px-2 py-1"
               disabled={isPending}
               autoFocus
+              required
+              maxLength={50}
             />
             {titleFields.title.errors && (
               <p className="text-red-500 text-sm mt-1">
@@ -159,6 +161,9 @@ export default function MainContent({
               defaultValue={content}
               className="flex-1 bg-white rounded-2xl py-6.5 px-7.5 text-base text-text-black-80 leading-normal resize-none overflow-y-scroll font-ja [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-thumb]:bg-[#B3B3B3] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-gray-500"
               disabled={isPending}
+              required
+              minLength={10}
+              maxLength={2000}
             />
             {bodyFields.body.errors && (
               <p className="text-red-500 text-sm mt-1">

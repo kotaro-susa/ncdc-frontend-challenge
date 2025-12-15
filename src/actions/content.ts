@@ -13,6 +13,7 @@ import type {
   UpdateContentDTO,
 } from "@/generated/api.schemas";
 import { HttpError } from "@/lib/api-client";
+import { updateTitleSchema, updateBodySchema } from "@/lib/schemas";
 
 /**
  * コンテンツ一覧を取得するServer Action
@@ -107,14 +108,18 @@ export async function updateContentTitle(
   id: number,
   formData: FormData
 ): Promise<{ success: boolean; error?: string }> {
-  const title = formData.get("title") as string;
+  // FormDataをオブジェクトに変換
+  const data = {
+    title: formData.get("title") as string,
+  };
 
-  if (!title || title.trim().length === 0) {
-    return { success: false, error: "タイトルを入力してください" };
-  }
+  // Zodでバリデーション
+  const validation = updateTitleSchema.safeParse(data);
 
-  if (title.length > 200) {
-    return { success: false, error: "タイトルは200文字以内で入力してください" };
+  if (!validation.success) {
+    // バリデーションエラーの最初のメッセージを返す
+    const firstError = validation.error.errors[0];
+    return { success: false, error: firstError.message };
   }
 
   try {
@@ -123,7 +128,7 @@ export async function updateContentTitle(
 
     // タイトルのみ更新
     await updateContent(id, {
-      title: title.trim(),
+      title: validation.data.title.trim(),
       body: currentContent.body || "",
     });
 
@@ -143,14 +148,18 @@ export async function updateContentBody(
   id: number,
   formData: FormData
 ): Promise<{ success: boolean; error?: string }> {
-  const body = formData.get("body") as string;
+  // FormDataをオブジェクトに変換
+  const data = {
+    body: formData.get("body") as string,
+  };
 
-  if (!body || body.trim().length === 0) {
-    return { success: false, error: "本文を入力してください" };
-  }
+  // Zodでバリデーション
+  const validation = updateBodySchema.safeParse(data);
 
-  if (body.length > 10000) {
-    return { success: false, error: "本文は10000文字以内で入力してください" };
+  if (!validation.success) {
+    // バリデーションエラーの最初のメッセージを返す
+    const firstError = validation.error.errors[0];
+    return { success: false, error: firstError.message };
   }
 
   try {
@@ -160,7 +169,7 @@ export async function updateContentBody(
     // 本文のみ更新
     await updateContent(id, {
       title: currentContent.title || "",
-      body: body.trim(),
+      body: validation.data.body.trim(),
     });
 
     return { success: true };
