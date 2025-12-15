@@ -97,7 +97,7 @@ export default function ContentLayout({
         />
         <SidebarInset className="flex-1 flex flex-col">
           <main className="flex-1 p-7.5 bg-[#F5F8FA] overflow-hidden mt-7.5 mx-10 rounded-2xl">
-            <MainContent title={title} content={body} />
+            <MainContent contentId={currentId} title={title} content={body} />
           </main>
           <Footer />
         </SidebarInset>

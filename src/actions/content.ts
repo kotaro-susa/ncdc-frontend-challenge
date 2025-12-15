@@ -99,3 +99,75 @@ export async function deleteContent(id: number): Promise<void> {
     throw new Error("コンテンツの削除に失敗しました");
   }
 }
+
+/**
+ * タイトルのみを更新するServer Action
+ */
+export async function updateContentTitle(
+  id: number,
+  formData: FormData
+): Promise<{ success: boolean; error?: string }> {
+  const title = formData.get("title") as string;
+
+  if (!title || title.trim().length === 0) {
+    return { success: false, error: "タイトルを入力してください" };
+  }
+
+  if (title.length > 200) {
+    return { success: false, error: "タイトルは200文字以内で入力してください" };
+  }
+
+  try {
+    // 現在のコンテンツを取得
+    const currentContent = await getContent(id);
+
+    // タイトルのみ更新
+    await updateContent(id, {
+      title: title.trim(),
+      body: currentContent.body || "",
+    });
+
+    return { success: true };
+  } catch (error) {
+    if (error instanceof HttpError && error.status === 404) {
+      return { success: false, error: "コンテンツが見つかりませんでした" };
+    }
+    return { success: false, error: "タイトルの更新に失敗しました" };
+  }
+}
+
+/**
+ * 本文のみを更新するServer Action
+ */
+export async function updateContentBody(
+  id: number,
+  formData: FormData
+): Promise<{ success: boolean; error?: string }> {
+  const body = formData.get("body") as string;
+
+  if (!body || body.trim().length === 0) {
+    return { success: false, error: "本文を入力してください" };
+  }
+
+  if (body.length > 10000) {
+    return { success: false, error: "本文は10000文字以内で入力してください" };
+  }
+
+  try {
+    // 現在のコンテンツを取得
+    const currentContent = await getContent(id);
+
+    // 本文のみ更新
+    await updateContent(id, {
+      title: currentContent.title || "",
+      body: body.trim(),
+    });
+
+    return { success: true };
+  } catch (error) {
+    if (error instanceof HttpError && error.status === 404) {
+      return { success: false, error: "コンテンツが見つかりませんでした" };
+    }
+    return { success: false, error: "本文の更新に失敗しました" };
+  }
+}
