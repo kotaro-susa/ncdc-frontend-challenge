@@ -12,6 +12,7 @@ import type {
   CreateContentDTO,
   UpdateContentDTO,
 } from "@/generated/api.schemas";
+import { HttpError } from "@/lib/api-client";
 
 /**
  * コンテンツ一覧を取得するServer Action
@@ -21,8 +22,7 @@ export async function getContentList(): Promise<Content[]> {
     const response = await contentControllerGetAllContentList();
 
     return response.data;
-  } catch (error) {
-    console.error("Failed to fetch content list:", error);
+  } catch {
     throw new Error("コンテンツ一覧の取得に失敗しました");
   }
 }
@@ -36,7 +36,9 @@ export async function getContent(id: number): Promise<Content> {
 
     return response.data;
   } catch (error) {
-    console.error(`Failed to fetch content ${id}:`, error);
+    if (error instanceof HttpError && error.status === 404) {
+      throw new Error("コンテンツが見つかりませんでした");
+    }
     throw new Error("コンテンツの取得に失敗しました");
   }
 }
@@ -50,7 +52,12 @@ export async function createContent(data: CreateContentDTO): Promise<Content> {
 
     return response.data;
   } catch (error) {
-    console.error("Failed to create content:", error);
+    if (
+      error instanceof HttpError &&
+      (error.status === 400 || error.status === 422)
+    ) {
+      throw new Error("入力内容に誤りがあります");
+    }
     throw new Error("コンテンツの作成に失敗しました");
   }
 }
@@ -67,7 +74,14 @@ export async function updateContent(
 
     return response.data;
   } catch (error) {
-    console.error(`Failed to update content ${id}:`, error);
+    if (error instanceof HttpError) {
+      if (error.status === 404) {
+        throw new Error("コンテンツが見つかりませんでした");
+      }
+      if (error.status === 400 || error.status === 422) {
+        throw new Error("入力内容に誤りがあります");
+      }
+    }
     throw new Error("コンテンツの更新に失敗しました");
   }
 }
@@ -79,7 +93,9 @@ export async function deleteContent(id: number): Promise<void> {
   try {
     await contentControllerDeleteContent(id);
   } catch (error) {
-    console.error(`Failed to delete content ${id}:`, error);
+    if (error instanceof HttpError && error.status === 404) {
+      throw new Error("コンテンツが見つかりませんでした");
+    }
     throw new Error("コンテンツの削除に失敗しました");
   }
 }
