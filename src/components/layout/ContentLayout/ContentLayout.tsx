@@ -4,7 +4,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Sidebar from "@/components/layout/Sidebar/Sidebar";
 import Footer from "@/components/layout/Footer/Footer";
 import MainContent from "@/components/layout/MainContent/MainContent";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { deleteContent, createContent } from "@/actions/content";
 import type { Content } from "@/generated/api.schemas";
 
@@ -96,7 +100,10 @@ export default function ContentLayout({
           onEditingChange={handleEditingChange}
         />
         <SidebarInset className="flex-1 flex flex-col">
-          <main className="flex-1 p-7.5 bg-[#F5F8FA] overflow-hidden mt-7.5 mx-10 rounded-2xl">
+          <div className="lg:hidden flex items-center px-4 py-3 bg-white border-b border-[#F6F8FA]">
+            <SidebarTrigger className="size-10 hover:bg-gray-100 rounded-md" />
+          </div>
+          <main className="flex-1 p-7.5 bg-[#F5F8FA] overflow-hidden lg:mt-7.5 lg:mx-10 mt-4 mx-4 rounded-2xl">
             <MainContent contentId={currentId} title={title} content={body} />
           </main>
           <Footer />
