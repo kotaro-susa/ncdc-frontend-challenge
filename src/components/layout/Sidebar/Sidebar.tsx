@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -20,10 +19,19 @@ interface SidebarProps {
   contentList?: Content[];
   currentId?: number;
   onDelete?: (id: number) => void;
+  onCreateNew?: () => void;
+  isEditing?: boolean;
+  onEditingChange?: (isEditing: boolean) => void;
 }
 
-export default function Sidebar({ contentList = [], currentId, onDelete }: SidebarProps) {
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+export default function Sidebar({
+  contentList = [],
+  currentId,
+  onDelete,
+  onCreateNew,
+  isEditing = false,
+  onEditingChange,
+}: SidebarProps) {
 
   return (
     <SidebarUI
@@ -86,13 +94,13 @@ export default function Sidebar({ contentList = [], currentId, onDelete }: Sideb
           <>
             <NewPageButton
               onClick={() => {
-                /* 新規ページ追加処理 */
+                onCreateNew?.();
               }}
             />
-            <DoneButton onClick={() => setIsEditing(false)} />
+            <DoneButton onClick={() => onEditingChange?.(false)} />
           </>
         ) : (
-          <EditButton onClick={() => setIsEditing(true)} />
+          <EditButton onClick={() => onEditingChange?.(true)} />
         )}
       </div>
     </SidebarUI>
