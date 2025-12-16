@@ -13,6 +13,7 @@ interface UseContentFieldEditorOptions<Schema extends z.ZodType> {
     id: number,
     formData: FormData
   ) => Promise<{ success: boolean; error?: string }>;
+  onEditingChange?: (editing: boolean) => void;
 }
 
 /**
@@ -29,8 +30,8 @@ export function useContentFieldEditor<Schema extends z.ZodType>({
   defaultValue,
   schema,
   updateAction,
+  onEditingChange,
 }: UseContentFieldEditorOptions<Schema>) {
-  const [isEditing, setIsEditing] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [optimisticValue, setOptimisticValue] = useState(defaultValue);
   const router = useRouter();
@@ -54,7 +55,7 @@ export function useContentFieldEditor<Schema extends z.ZodType>({
       startTransition(async () => {
         // 即座にUIを更新
         setOptimisticValue(newValue);
-        setIsEditing(false);
+        onEditingChange?.(false);
 
         const result = await updateAction(contentId, formData);
         if (result.success) {
@@ -62,7 +63,7 @@ export function useContentFieldEditor<Schema extends z.ZodType>({
         } else {
           // エラー時は元の値に戻す
           setOptimisticValue(defaultValue);
-          setIsEditing(true);
+          onEditingChange?.(true);
           console.error(result.error);
           toast.error(result.error || "エラーが発生しました");
         }
@@ -70,24 +71,10 @@ export function useContentFieldEditor<Schema extends z.ZodType>({
     },
   });
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancel = () => {
-    form.reset();
-    setIsEditing(false);
-  };
-
   return {
-    isEditing,
     isPending,
     form,
     fields,
     optimisticValue,
-    handlers: {
-      onEdit: handleEdit,
-      onCancel: handleCancel,
-    },
   };
 }

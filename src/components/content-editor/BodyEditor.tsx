@@ -7,6 +7,9 @@ import { useBodyEditor } from "@/hooks/use-body-editor";
 interface BodyEditorProps {
   contentId: number;
   content: string;
+  isEditing?: boolean;
+  onEditingChange?: (editing: boolean) => void;
+  disabled?: boolean;
 }
 
 /**
@@ -16,9 +19,29 @@ interface BodyEditorProps {
  * - 本文の表示/編集UIの切り替え
  * - フォームの表示とバリデーションエラーの表示
  */
-export default function BodyEditor({ contentId, content }: BodyEditorProps) {
-  const { isEditing, isPending, form, fields, optimisticValue, handlers } =
-    useBodyEditor(contentId, content);
+export default function BodyEditor({
+  contentId,
+  content,
+  isEditing: externalIsEditing,
+  onEditingChange,
+  disabled = false,
+}: BodyEditorProps) {
+  const { isPending, form, fields, optimisticValue } = useBodyEditor(
+    contentId,
+    content,
+    onEditingChange
+  );
+
+  const isEditing = externalIsEditing ?? false;
+
+  const handleEdit = () => {
+    onEditingChange?.(true);
+  };
+
+  const handleCancel = () => {
+    form.reset();
+    onEditingChange?.(false);
+  };
 
   const displayContent = optimisticValue.body ?? content;
 
@@ -54,7 +77,7 @@ export default function BodyEditor({ contentId, content }: BodyEditorProps) {
           <div className="flex gap-2.5">
             <ActionButton
               variant="cancel"
-              onClick={handlers.onCancel}
+              onClick={handleCancel}
               disabled={isPending}
             />
             <ActionButton
@@ -65,7 +88,7 @@ export default function BodyEditor({ contentId, content }: BodyEditorProps) {
             />
           </div>
         ) : (
-          <EditButton onClick={handlers.onEdit} />
+          <EditButton onClick={handleEdit} disabled={disabled} />
         )}
       </div>
     </div>

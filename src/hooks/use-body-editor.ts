@@ -11,7 +11,11 @@ import { useContentFieldEditor } from "./use-content-field-editor";
  * - 本文更新のServer Action呼び出し
  * - 編集モードの切り替え
  */
-export function useBodyEditor(contentId: number, initialBody: string) {
+export function useBodyEditor(
+  contentId: number,
+  initialBody: string,
+  onEditingChange?: (editing: boolean) => void
+) {
   return useContentFieldEditor({
     contentId,
     defaultValue: {
@@ -19,5 +23,6 @@ export function useBodyEditor(contentId: number, initialBody: string) {
     },
     schema: updateBodySchema,
     updateAction: updateContentBody,
+    onEditingChange,
   });
 }

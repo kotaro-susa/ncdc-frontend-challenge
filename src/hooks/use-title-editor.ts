@@ -11,7 +11,11 @@ import { useContentFieldEditor } from "./use-content-field-editor";
  * - タイトル更新のServer Action呼び出し
  * - 編集モードの切り替え
  */
-export function useTitleEditor(contentId: number, initialTitle: string) {
+export function useTitleEditor(
+  contentId: number,
+  initialTitle: string,
+  onEditingChange?: (editing: boolean) => void
+) {
   return useContentFieldEditor({
     contentId,
     defaultValue: {
@@ -19,5 +23,6 @@ export function useTitleEditor(contentId: number, initialTitle: string) {
     },
     schema: updateTitleSchema,
     updateAction: updateContentTitle,
+    onEditingChange,
   });
 }

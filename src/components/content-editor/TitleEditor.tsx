@@ -7,6 +7,9 @@ import { useTitleEditor } from "@/hooks/use-title-editor";
 interface TitleEditorProps {
   contentId: number;
   title: string;
+  isEditing?: boolean;
+  onEditingChange?: (editing: boolean) => void;
+  disabled?: boolean;
 }
 
 /**
@@ -16,9 +19,29 @@ interface TitleEditorProps {
  * - タイトルの表示/編集UIの切り替え
  * - フォームの表示とバリデーションエラーの表示
  */
-export default function TitleEditor({ contentId, title }: TitleEditorProps) {
-  const { isEditing, isPending, form, fields, optimisticValue, handlers } =
-    useTitleEditor(contentId, title);
+export default function TitleEditor({
+  contentId,
+  title,
+  isEditing: externalIsEditing,
+  onEditingChange,
+  disabled = false,
+}: TitleEditorProps) {
+  const { isPending, form, fields, optimisticValue } = useTitleEditor(
+    contentId,
+    title,
+    onEditingChange
+  );
+
+  const isEditing = externalIsEditing ?? false;
+
+  const handleEdit = () => {
+    onEditingChange?.(true);
+  };
+
+  const handleCancel = () => {
+    form.reset();
+    onEditingChange?.(false);
+  };
 
   const displayTitle = optimisticValue.title ?? title;
 
@@ -49,7 +72,7 @@ export default function TitleEditor({ contentId, title }: TitleEditorProps) {
         <div className="flex gap-2.5">
           <ActionButton
             variant="cancel"
-            onClick={handlers.onCancel}
+            onClick={handleCancel}
             disabled={isPending}
           />
           <ActionButton
@@ -60,7 +83,7 @@ export default function TitleEditor({ contentId, title }: TitleEditorProps) {
           />
         </div>
       ) : (
-        <EditButton onClick={handlers.onEdit} />
+        <EditButton onClick={handleEdit} disabled={disabled} />
       )}
     </div>
   );
