@@ -17,7 +17,13 @@ export async function updateContentTitle(
   });
 
   if (submission.status !== "success") {
-    return { success: false, error: "入力内容に誤りがあります" };
+    // バリデーションエラーの詳細メッセージを取得
+    const errors = submission.reply().error;
+    const firstErrorMessage = errors?.title?.[0];
+    return {
+      success: false,
+      error: firstErrorMessage || "入力内容に誤りがあります",
+    };
   }
 
   try {
@@ -51,7 +57,13 @@ export async function updateContentBody(
   });
 
   if (submission.status !== "success") {
-    return { success: false, error: "入力内容に誤りがあります" };
+    // バリデーションエラーの詳細メッセージを取得
+    const errors = submission.reply().error;
+    const firstErrorMessage = errors?.body?.[0];
+    return {
+      success: false,
+      error: firstErrorMessage || "入力内容に誤りがあります",
+    };
   }
 
   try {

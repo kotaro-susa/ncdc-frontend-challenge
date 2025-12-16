@@ -2,6 +2,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import type { z } from "zod";
 
 interface UseContentFieldEditorOptions<Schema extends z.ZodType> {
@@ -56,7 +57,6 @@ export function useContentFieldEditor<Schema extends z.ZodType>({
         setIsEditing(false);
 
         const result = await updateAction(contentId, formData);
-
         if (result.success) {
           router.refresh();
         } else {
@@ -64,7 +64,7 @@ export function useContentFieldEditor<Schema extends z.ZodType>({
           setOptimisticValue(defaultValue);
           setIsEditing(true);
           console.error(result.error);
-          alert(result.error || "エラーが発生しました");
+          toast.error(result.error || "エラーが発生しました");
         }
       });
     },

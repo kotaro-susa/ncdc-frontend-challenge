@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { updateContentTitle, updateContentBody } from "./form-action";
 import { getContent, updateContent } from "./content";
-import { HttpError } from "@/lib/api-client";
+import { AppError, ERROR_CODES } from "@/lib/errors";
 import type { Content } from "@/generated/api.schemas";
 
 // モック
@@ -58,7 +58,7 @@ describe("Server Actions", () => {
       formData.set("title", "新しいタイトル");
 
       vi.mocked(getContent).mockRejectedValue(
-        new HttpError(404, "Not Found", "/api/content/1")
+        new AppError("コンテンツが見つかりませんでした", ERROR_CODES.NOT_FOUND, 404)
       );
 
       const result = await updateContentTitle(1, formData);
@@ -107,7 +107,7 @@ describe("Server Actions", () => {
       formData.set("body", "これは新しい本文です。10文字以上あります。");
 
       vi.mocked(getContent).mockRejectedValue(
-        new HttpError(404, "Not Found", "/api/content/1")
+        new AppError("コンテンツが見つかりませんでした", ERROR_CODES.NOT_FOUND, 404)
       );
 
       const result = await updateContentBody(1, formData);

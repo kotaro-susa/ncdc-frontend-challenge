@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { deleteContent, createContent } from "@/actions/content";
 import type { Content } from "@/generated/api.schemas";
 
@@ -71,7 +72,7 @@ export function useContentManagement(
         }
       } catch (error) {
         console.error("Failed to delete content:", error);
-        alert("コンテンツの削除に失敗しました");
+        toast.error("コンテンツの削除に失敗しました");
       }
     },
     [contentList, currentId, isEditing, router]
@@ -99,7 +100,7 @@ export function useContentManagement(
       router.push(`/${newContent.id}?${params.toString()}`);
     } catch (error) {
       console.error("Failed to create content:", error);
-      alert("コンテンツの作成に失敗しました");
+      toast.error("コンテンツの作成に失敗しました");
     }
   }, [isEditing, router]);
 
