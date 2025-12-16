@@ -24,8 +24,13 @@ export default function ContentLayout({
   title,
   body,
 }: ContentLayoutProps) {
-  const { isEditing, handleEditingChange, handleDelete, handleCreateNew } =
-    useContentManagement(contentList, currentId);
+  const {
+    isEditing,
+    handleEditingChange,
+    handleDelete,
+    handleCreateNew,
+    canDelete,
+  } = useContentManagement(contentList, currentId);
 
   return (
     <SidebarProvider className="h-screen w-screen overflow-hidden">
@@ -37,6 +42,7 @@ export default function ContentLayout({
           onCreateNew={handleCreateNew}
           isEditing={isEditing}
           onEditingChange={handleEditingChange}
+          canDelete={canDelete}
         />
         <SidebarInset className="flex-1 flex flex-col">
           <div className="lg:hidden flex items-center px-4 py-3 bg-white border-b border-bg-light-blue-2">

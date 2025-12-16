@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { deleteContent, createContent } from "@/actions/content";
@@ -20,6 +20,7 @@ export function useContentManagement(
   const router = useRouter();
   const searchParams = useSearchParams();
   const isEditing = searchParams.get("edit") === "true";
+  const [isDeleting, setIsDeleting] = useState(false);
 
   /**
    * 編集モードの切り替え
@@ -40,11 +41,26 @@ export function useContentManagement(
   /**
    * コンテンツの削除処理
    *
+   * - 最後の1件は削除できない
+   * - 削除中は連続削除を防止
    * - 現在表示中のコンテンツを削除した場合は適切にリダイレクト
    * - 他のコンテンツを削除した場合はページをリフレッシュ
    */
   const handleDelete = useCallback(
     async (id: number) => {
+      // 削除中は処理しない（連続削除の防止）
+      if (isDeleting) {
+        return;
+      }
+
+      // 最後の1件は削除できない
+      if (contentList.length <= 1) {
+        toast.error("最後の1件は削除できません");
+        return;
+      }
+
+      setIsDeleting(true);
+
       try {
         await deleteContent(id);
 
@@ -68,14 +84,17 @@ export function useContentManagement(
             router.push("/");
           }
         } else {
+          // 他のコンテンツを削除した場合はリフレッシュしてフラグをリセット
           router.refresh();
+          setIsDeleting(false);
         }
       } catch (error) {
         console.error("Failed to delete content:", error);
         toast.error("コンテンツの削除に失敗しました");
+        setIsDeleting(false);
       }
     },
-    [contentList, currentId, isEditing, router]
+    [contentList, currentId, isEditing, router, isDeleting]
   );
 
   /**
@@ -104,10 +123,14 @@ export function useContentManagement(
     }
   }, [isEditing, router]);
 
+  // 削除可能かどうか（最後の1件でない、かつ削除中でない）
+  const canDelete = contentList.length > 1 && !isDeleting;
+
   return {
     isEditing,
     handleEditingChange,
     handleDelete,
     handleCreateNew,
+    canDelete,
   };
 }

@@ -22,6 +22,7 @@ interface SidebarProps {
   onCreateNew?: () => void;
   isEditing?: boolean;
   onEditingChange?: (isEditing: boolean) => void;
+  canDelete?: boolean;
 }
 
 export default function Sidebar({
@@ -31,6 +32,7 @@ export default function Sidebar({
   onCreateNew,
   isEditing = false,
   onEditingChange,
+  canDelete = true,
 }: SidebarProps) {
 
   return (
@@ -71,7 +73,12 @@ export default function Sidebar({
                     e.stopPropagation();
                     onDelete?.(content.id);
                   }}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer hover:opacity-70"
+                  disabled={!canDelete}
+                  className={`absolute right-2.5 top-1/2 -translate-y-1/2 ${
+                    canDelete
+                      ? "cursor-pointer hover:opacity-70"
+                      : "cursor-not-allowed opacity-40"
+                  }`}
                 >
                   <Image
                     src="/delete.svg"
