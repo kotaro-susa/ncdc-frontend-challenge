@@ -20,7 +20,7 @@ export default function BodyEditor({ contentId, content }: BodyEditorProps) {
   const { isEditing, isPending, form, fields, optimisticValue, handlers } =
     useBodyEditor(contentId, content);
 
-  const displayContent = (optimisticValue.body as string) || content;
+  const displayContent = optimisticValue.body ?? content;
 
   return (
     <div className="flex-1 flex mt-4 gap-5 min-h-0">

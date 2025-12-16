@@ -20,7 +20,7 @@ export default function TitleEditor({ contentId, title }: TitleEditorProps) {
   const { isEditing, isPending, form, fields, optimisticValue, handlers } =
     useTitleEditor(contentId, title);
 
-  const displayTitle = (optimisticValue.title as string) || title;
+  const displayTitle = optimisticValue.title ?? title;
 
   return (
     <div className="flex items-center justify-between shrink-0">
