@@ -17,23 +17,19 @@ interface TitleEditorProps {
  * - フォームの表示とバリデーションエラーの表示
  */
 export default function TitleEditor({ contentId, title }: TitleEditorProps) {
-  const { isEditing, isPending, form, fields, handlers } = useTitleEditor(
-    contentId,
-    title
-  );
+  const { isEditing, isPending, form, fields, optimisticValue, handlers } =
+    useTitleEditor(contentId, title);
+
+  const displayTitle = (optimisticValue.title as string) || title;
 
   return (
     <div className="flex items-center justify-between shrink-0">
       {isEditing ? (
-        <form
-          id={form.id}
-          onSubmit={form.onSubmit}
-          className="flex-1 mr-4"
-        >
+        <form id={form.id} onSubmit={form.onSubmit} className="flex-1 mr-4">
           <input
             type="text"
             name="title"
-            defaultValue={title}
+            defaultValue={displayTitle}
             className="w-full text-2xl pl-7.5 font-bold text-text-black-80 bg-white border border-brand-light-blue rounded py-1 focus:outline-none focus:border-brand-light-blue"
             disabled={isPending}
             autoFocus
@@ -41,14 +37,12 @@ export default function TitleEditor({ contentId, title }: TitleEditorProps) {
             maxLength={50}
           />
           {fields.title.errors && (
-            <p className="text-red-500 text-sm mt-1">
-              {fields.title.errors}
-            </p>
+            <p className="text-red-500 text-sm mt-1">{fields.title.errors}</p>
           )}
         </form>
       ) : (
         <h1 className="text-2xl pl-7.5 font-bold text-text-black-80">
-          {title}
+          {displayTitle}
         </h1>
       )}
       {isEditing ? (

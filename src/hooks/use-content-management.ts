@@ -71,7 +71,7 @@ export function useContentManagement(
         }
       } catch (error) {
         console.error("Failed to delete content:", error);
-        // TODO: エラー通知の実装（トースト等）
+        alert("コンテンツの削除に失敗しました");
       }
     },
     [contentList, currentId, isEditing, router]
@@ -99,7 +99,7 @@ export function useContentManagement(
       router.push(`/${newContent.id}?${params.toString()}`);
     } catch (error) {
       console.error("Failed to create content:", error);
-      // TODO: エラー通知の実装（トースト等）
+      alert("コンテンツの作成に失敗しました");
     }
   }, [isEditing, router]);
 

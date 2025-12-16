@@ -1,8 +1,9 @@
 "use server";
 
 import { updateTitleSchema, updateBodySchema } from "@/lib/schemas";
-import { HttpError } from "@/lib/api-client";
+import { AppError } from "@/lib/errors";
 import { getContent, updateContent } from "./content";
+import { parseWithZod } from "@conform-to/zod";
 
 /**
  * タイトルのみを更新するServer Action
@@ -11,18 +12,12 @@ export async function updateContentTitle(
   id: number,
   formData: FormData
 ): Promise<{ success: boolean; error?: string }> {
-  // FormDataをオブジェクトに変換
-  const data = {
-    title: formData.get("title") as string,
-  };
+  const submission = parseWithZod(formData, {
+    schema: updateTitleSchema,
+  });
 
-  // Zodでバリデーション
-  const validation = updateTitleSchema.safeParse(data);
-
-  if (!validation.success) {
-    // バリデーションエラーの最初のメッセージを返す
-    const firstError = validation.error.errors[0];
-    return { success: false, error: firstError.message };
+  if (submission.status !== "success") {
+    return { success: false, error: "入力内容に誤りがあります" };
   }
 
   try {
@@ -31,14 +26,14 @@ export async function updateContentTitle(
 
     // タイトルのみ更新
     await updateContent(id, {
-      title: validation.data.title.trim(),
+      title: submission.value.title.trim(),
       body: currentContent.body || "",
     });
 
     return { success: true };
   } catch (error) {
-    if (error instanceof HttpError && error.status === 404) {
-      return { success: false, error: "コンテンツが見つかりませんでした" };
+    if (error instanceof AppError) {
+      return { success: false, error: error.message };
     }
     return { success: false, error: "タイトルの更新に失敗しました" };
   }
@@ -51,18 +46,12 @@ export async function updateContentBody(
   id: number,
   formData: FormData
 ): Promise<{ success: boolean; error?: string }> {
-  // FormDataをオブジェクトに変換
-  const data = {
-    body: formData.get("body"),
-  };
+  const submission = parseWithZod(formData, {
+    schema: updateBodySchema,
+  });
 
-  // Zodでバリデーション
-  const validation = updateBodySchema.safeParse(data);
-
-  if (!validation.success) {
-    // バリデーションエラーの最初のメッセージを返す
-    const firstError = validation.error.errors[0];
-    return { success: false, error: firstError.message };
+  if (submission.status !== "success") {
+    return { success: false, error: "入力内容に誤りがあります" };
   }
 
   try {
@@ -72,13 +61,13 @@ export async function updateContentBody(
     // 本文のみ更新
     await updateContent(id, {
       title: currentContent.title || "",
-      body: validation.data.body.trim(),
+      body: submission.value.body.trim(),
     });
 
     return { success: true };
   } catch (error) {
-    if (error instanceof HttpError && error.status === 404) {
-      return { success: false, error: "コンテンツが見つかりませんでした" };
+    if (error instanceof AppError) {
+      return { success: false, error: error.message };
     }
     return { success: false, error: "本文の更新に失敗しました" };
   }

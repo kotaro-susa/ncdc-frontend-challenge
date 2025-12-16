@@ -13,6 +13,45 @@ import type {
   UpdateContentDTO,
 } from "@/generated/api.schemas";
 import { HttpError } from "@/lib/api-client";
+import { AppError, ERROR_CODES } from "@/lib/errors";
+
+/**
+ * 共通のエラーハンドリング関数
+ */
+function handleApiError(error: unknown, defaultMessage: string): never {
+  console.error(`API Error: ${defaultMessage}`, error);
+
+  if (error instanceof HttpError) {
+    if (error.status === 404) {
+      throw new AppError(
+        "コンテンツが見つかりませんでした",
+        ERROR_CODES.NOT_FOUND,
+        404,
+        error
+      );
+    }
+    if (error.status === 400 || error.status === 422) {
+      throw new AppError(
+        "入力内容に誤りがあります",
+        ERROR_CODES.VALIDATION_ERROR,
+        error.status,
+        error
+      );
+    }
+    throw new AppError(
+      `${defaultMessage} (Status: ${error.status})`,
+      ERROR_CODES.NETWORK,
+      error.status,
+      error
+    );
+  }
+
+  if (error instanceof AppError) {
+    throw error;
+  }
+
+  throw new AppError(defaultMessage, ERROR_CODES.UNEXPECTED, 500, error);
+}
 
 /**
  * コンテンツ一覧を取得するServer Action
@@ -20,10 +59,9 @@ import { HttpError } from "@/lib/api-client";
 export async function getContentList(): Promise<Content[]> {
   try {
     const response = await contentControllerGetAllContentList();
-
     return response.data;
-  } catch {
-    throw new Error("コンテンツ一覧の取得に失敗しました");
+  } catch (error) {
+    handleApiError(error, "コンテンツ一覧の取得に失敗しました");
   }
 }
 
@@ -33,13 +71,9 @@ export async function getContentList(): Promise<Content[]> {
 export async function getContent(id: number): Promise<Content> {
   try {
     const response = await contentControllerGetContent(id);
-
     return response.data;
   } catch (error) {
-    if (error instanceof HttpError && error.status === 404) {
-      throw new Error("コンテンツが見つかりませんでした");
-    }
-    throw new Error("コンテンツの取得に失敗しました");
+    handleApiError(error, "コンテンツの取得に失敗しました");
   }
 }
 
@@ -49,16 +83,9 @@ export async function getContent(id: number): Promise<Content> {
 export async function createContent(data: CreateContentDTO): Promise<Content> {
   try {
     const response = await contentControllerAddContent(data);
-
     return response.data;
   } catch (error) {
-    if (
-      error instanceof HttpError &&
-      (error.status === 400 || error.status === 422)
-    ) {
-      throw new Error("入力内容に誤りがあります");
-    }
-    throw new Error("コンテンツの作成に失敗しました");
+    handleApiError(error, "コンテンツの作成に失敗しました");
   }
 }
 
@@ -71,18 +98,9 @@ export async function updateContent(
 ): Promise<Content> {
   try {
     const response = await contentControllerUpdateContent(id, data);
-
     return response.data;
   } catch (error) {
-    if (error instanceof HttpError) {
-      if (error.status === 404) {
-        throw new Error("コンテンツが見つかりませんでした");
-      }
-      if (error.status === 400 || error.status === 422) {
-        throw new Error("入力内容に誤りがあります");
-      }
-    }
-    throw new Error("コンテンツの更新に失敗しました");
+    handleApiError(error, "コンテンツの更新に失敗しました");
   }
 }
 
@@ -93,9 +111,6 @@ export async function deleteContent(id: number): Promise<void> {
   try {
     await contentControllerDeleteContent(id);
   } catch (error) {
-    if (error instanceof HttpError && error.status === 404) {
-      throw new Error("コンテンツが見つかりませんでした");
-    }
-    throw new Error("コンテンツの削除に失敗しました");
+    handleApiError(error, "コンテンツの削除に失敗しました");
   }
 }

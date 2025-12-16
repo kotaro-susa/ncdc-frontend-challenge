@@ -1,10 +1,6 @@
-import { useState, useTransition } from "react";
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
-import { useRouter } from "next/navigation";
 import { updateBodySchema } from "@/lib/schemas";
 import { updateContentBody } from "@/actions/form-action";
-import type { z } from "zod";
+import { useContentFieldEditor } from "./use-content-field-editor";
 
 /**
  * 本文編集のためのカスタムフック
@@ -16,56 +12,12 @@ import type { z } from "zod";
  * - 編集モードの切り替え
  */
 export function useBodyEditor(contentId: number, initialBody: string) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
-
-  // 本文編集用フォーム
-  const [form, fields] = useForm({
-    onValidate({ formData }) {
-      return parseWithZod(formData, {
-        schema: updateBodySchema as z.ZodType,
-      });
-    },
-    shouldValidate: "onBlur",
-    shouldRevalidate: "onInput",
+  return useContentFieldEditor({
+    contentId,
     defaultValue: {
       body: initialBody,
     },
-    async onSubmit(event, { formData }) {
-      event.preventDefault();
-
-      startTransition(async () => {
-        const result = await updateContentBody(contentId, formData);
-
-        if (result.success) {
-          setIsEditing(false);
-          router.refresh();
-        } else {
-          console.error(result.error);
-          // TODO: エラー通知の実装（トースト等）
-        }
-      });
-    },
+    schema: updateBodySchema,
+    updateAction: updateContentBody,
   });
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancel = () => {
-    form.reset();
-    setIsEditing(false);
-  };
-
-  return {
-    isEditing,
-    isPending,
-    form,
-    fields,
-    handlers: {
-      onEdit: handleEdit,
-      onCancel: handleCancel,
-    },
-  };
 }
